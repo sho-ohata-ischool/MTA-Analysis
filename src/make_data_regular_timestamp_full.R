@@ -46,7 +46,7 @@ format_data <- function(file_name, last_reading=NULL) {
   all[,INTERVAL:=paste(TIME_SHIFT,TIME,sep='-')]
   all[,`:=`(TIME_SHIFT=NULL, TIME=NULL)]
   all <- all[,.(ENTRIES=max(Diff1), EXITS=max(Diff2)),by=.(UNIT,SCP,DATE,INTERVAL)][,.(ENTRIES=sum(ENTRIES),EXITS=sum(EXITS),METER_COUNT=.N), by=.(UNIT,DATE,INTERVAL)] ##get max in case of duplicate and then sum
-  processed_data_path <- file.path(getwd(), "data", "processed_data", paste(substring(file_name, 11,16), "_processed_data.csv", sep=''))
+  processed_data_path <- file.path(getwd(), "data", "processed", paste(substring(file_name, 11,16), "_processed_data.csv", sep=''))
   write.csv(all, processed_data_path, row.names=FALSE, quote = FALSE)
   return(last_reading)
 }
