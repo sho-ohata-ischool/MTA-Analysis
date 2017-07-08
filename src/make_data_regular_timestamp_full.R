@@ -66,4 +66,5 @@ last_reading <- format_data(file_list[1]) ## for first file process and create d
 
 for (file_name in file_list[2:length(file_list)]){
   last_reading <- format_data(file_name, last_reading)
+  print(paste("Finished file:", file_name))
 }
