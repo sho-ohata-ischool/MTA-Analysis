@@ -25,7 +25,12 @@ format_data <- function(file_name, last_reading=NULL) {
     all[,DATE:=format(as.Date(DATE,format="%m-%d-%y"),"%m/%d/%Y")]
   }  
   else {
-    all <- fread(file_path)
+    t <- try(fread(file_path), silent = TRUE)
+    if("try-error" %in% class(t)) {
+        all <- data.table(read.csv(file_path, header = TRUE))
+      } else {
+        all <- fread(file_path)
+      }
     all <- all[, c("C/A", "UNIT", "SCP", "DATE",  "TIME","DESC", "ENTRIES", "EXITS")]
   }
   
