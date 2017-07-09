@@ -30,6 +30,7 @@ format_data <- function(file_name, last_reading=NULL) {
     all <- try(fread(file_path), silent = TRUE) ##handle files with missing data with read.csv instead
     if("try-error" %in% class(all)) {
         all <- data.table(read.csv(file_path, header = TRUE))
+	setnames(all,"C.A","C/A")
       } 
     all <- all[, c("C/A", "UNIT", "SCP", "DATE",  "TIME","DESC", "ENTRIES", "EXITS")]
   }
