@@ -14,15 +14,18 @@ processed_data_list <- list.files(processed_data_path)[grepl("(?=.*processed)(?=
 
 unprocessed_list <- raw_data_list[!(substring(raw_data_list,11,16) %in% substring(processed_data_list, 1,6))]
 unprocessed_list <- unprocessed_list[order(unprocessed_list)]
-  
-for (file_name in unprocessed_list) {
-  prev_file_name <- paste(as.character(prev_date(as.Date(substring(file_name,11,16),"%y%m%d"))),"_processed_data.csv", sep='')
-  prev_file_path <- file.path(getwd(),"data","processed",prev_file_name)
-  if (file.exists(prev_file_path)) {
-    prev_data <- fread(prev_file_path)
-    last_reading <- prev_data[DATE==max(prev_data[,DATE])][INTERVAL %in% max_interval]
-    last_reading <- format_data(file_name, last_reading)
-  } else {
-    print(paste("Previous File:", prev_file_name, "not found.", sep = ' '))
-  }
+
+last_reading <- format_data(unprocessed_list[1]) ## for first file process and create data of last reading
+prev_file_name <- unprocessed_list[1]
+
+if (length(unprocessed_list) > 1) {
+  unprocessed_list <- unprocessed_list[2:length(unprocessed_list)]
+  for (file_name in unprocessed_list) {
+    if (prev_file_name == paste("turnstile_", as.character(prev_date(as.Date(substring(file_name,11,16),"%y%m%d"))),".txt", sep='')) {
+      last_reading <- format_data(file_name, last_reading)
+    } else {
+      last_reading <- format_data(file_name)
+    }
+    prev_file_name <- file_name
+  }  
 }
